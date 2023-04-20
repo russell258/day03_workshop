@@ -1,7 +1,9 @@
 package sg.edu.nus.iss.sg.edu.nus.iss;
 
+import java.io.BufferedReader;
 import java.io.Console;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -47,6 +49,9 @@ public class App
             if (input.startsWith("login")){
                 Scanner scan = new Scanner(input.substring(5));
                 
+                //clear cartItems whenever another login happens.
+                cartItems.clear();
+
                 while (scan.hasNext()){
                     loginuser = scan.next();
                 }
@@ -57,7 +62,7 @@ public class App
                 if (loginFile.exists()){
                     System.out.println("File " + loginuser + " already exists");
                     
-                    //need to print out what is in their cart into cartItems
+                    //need to retrieve from their file into cartItems, otherwise will just overlap
 
                 }else{
                     //login File is the directory Path "dirPath" joined with "loginuser"
@@ -89,13 +94,22 @@ public class App
                 }
             }
         }
+    
+        // user must be login first
+        // will need a File class and reader class to read the cart items from the file. 
+        // currently reading from cartItems directly. 
 
             if (input.equals("list")){
                 int i = 0;
-                for (String item: cartItems){
+                String line = "";
+                BufferedReader br = new BufferedReader(new FileReader(dirPath+File.separator+loginuser));
+                line = br.readLine();
+                while((line=br.readLine())!=null){
+                    cartItems.add(line);
                     i++;
-                    System.out.println(i + ". " + item);
+                    System.out.println(i + ". "+ line);
                 }
+                br.close();
             }
             if (input.startsWith("delete")){
                 Scanner scan = new Scanner(input.substring(6));
@@ -129,6 +143,9 @@ public class App
                 pw.close();
                 fw.close();
             }
+
+
+
 
         }
 
